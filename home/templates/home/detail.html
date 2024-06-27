@@ -1,0 +1,74 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <h2>{{ product.name }}</h2>
+    <small>{{ product.created }}</small>
+    <hr>
+    <div class="center">
+        <img src="{{ product.image.url }}" alt="" class="product-image">
+        <p>{{ product.description }}</p>
+    </div>
+    <br>
+
+    <form action="{% url 'orders:cart_add' product.id %}" method="post" class="col-md-1" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ product.price | separate}} Toman
+        <input type="submit" value="{% if product.available %}Add To Cart{% else %}out of stock{% endif %}"
+               class="btn btn-{% if product.available %}primary{% else %}danger disabled{% endif %}">
+    </form>
+    <br>
+
+    <hr>
+    <strong>Comments</strong><br>
+    <small> {{ comments.count }} Comments</small>
+    {% if request.user.is_authenticated %}
+        <form action="" method="post" class="col-md-4" style="margin-left: 20px">
+            {% csrf_token %}
+            {{ comment_create_form.as_p }}
+            <input type="submit" value="Send" class="btn btn-primary">
+        </form>
+    {% else %}
+        <p class="alert alert-warning"> Only logged in users can comment </p>
+    {% endif %}
+    <br>
+    {% for comment in comments %}
+        <div class="card bg-dark text-white" style="margin-left: 20px; margin-right: 20px">
+            <p class="card-header"> {{ comment.user }} | {{ comment.created | timesince }}</p>
+            <p class="card-body"> {{ comment.body }} </p>
+            {% if request.user.id == comment.user.id %}
+                <a href="{% url 'home:comment_delete' comment.id %}" class="btn btn-danger">Delete</a>
+            {% endif %}
+            {% if request.user.is_authenticated %}
+                <form action="{% url 'home:comment_reply' product.id comment.id %}" method="post" id="reply_form"
+                      class="col-md-3">
+                    {% csrf_token %}
+                    {{ reply_form }}
+                    <input type="submit" value="Reply" class="btn btn-primary">
+                </form>
+            {% endif %}
+
+            {% with replies=comment.Rcomments.all %}
+                {% for reply in replies %}
+                    <div class="card bg-secondary text-white p-3 m-2">
+                        <p class="card-header"> {{ reply.user }} - {{ reply.created | timesince }} - {{ reply.id }}</p>
+                        <p class="card-body"> {{ reply.body }} </p>
+                        {% if request.user.id == reply.user.id %}
+                            <a href="{% url 'home:comment_delete' reply.id %}" class="btn btn-danger">Delete</a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+        </div>
+        <br>
+    {% empty %}
+        <p> No Comments yet </p>
+    {% endfor %}
+{% endblock %}

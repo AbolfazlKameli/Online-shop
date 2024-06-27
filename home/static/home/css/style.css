@@ -1,0 +1,21 @@
+h3 {
+    color: #000d2f;
+}
+
+.center {
+    display: flex;
+    gap: 10px;
+}
+
+#product_card {
+    width: 18rem;
+}
+
+.product-image {
+    width: 300px;
+}
+
+#reply_form {
+    padding: 20px;
+    display: none;
+}

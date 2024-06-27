@@ -1,0 +1,93 @@
+{% extends 'parent/base.html' %}
+
+{% load static %}
+{% load custom_tags %}
+
+{% block extra_headers %}
+    <link rel="stylesheet" href="{% static 'users/css/profile.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <h2><strong>{{ user.full_name|cap_all }}</strong></h2>
+
+    <div class="profile_info h4">
+        <p><strong>FullName</strong>: {{ user.full_name }}</p>
+        <p><strong>PhoneNumber</strong>: {{ user.phone_number }}</p>
+        <p><strong>Email: </strong>{{ user.email }}</p>
+        <p><strong>LastLogin</strong>= {{ user.last_login|date:"Y/m/d, H:i" }}</p>
+        <p><strong>active=</strong> {{ user.is_active }}</p>
+        <a href="{% url 'users:edit_profile' %}" class="btn btn-primary"> Edit Profile </a>
+    </div>
+    <br><br>
+
+    <div>
+        <h2>Your Pays</h2>
+        {% if user.pay_user_info %}
+            <table class="table table-dark table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">UserPhoneNumber</th>
+                    <th scope="col">order_id</th>
+                    <th scope="col">reference_id</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                </thead>
+                <tbody>
+                {% with pay_info=user.pay_user_info.all %}
+                    {% for info in pay_info %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ info.user.phone_number }}</td>
+                            <td>{{ info.order.id }}</td>
+                            <td>{{ info.reference_id }}</td>
+                            <td>{{ info.created | date:"Y/m/d" }}</td>
+                            <td>{{ info.created | date:"H:i" }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endwith %}
+                </tbody>
+            </table>
+            <hr>
+        {% endif %}
+    </div>
+
+    <div>
+        <h2>Your orders</h2>
+        {% if user.orders.all %}
+            <table class="table table-dark table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Updated</th>
+                    <th scope="col">TotalPrice</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Paid</th>
+                    <th scope="col">Detail</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% with orders=user.orders.all %}
+                    {% for order in orders %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.created | date:"Y/m/d, H:i" }}</td>
+                            <td>{{ order.updated | date:"Y/m/d" }}</td>
+                            <td>{{ order.get_total_price | separate }}</td>
+                            <td>{{ order.discount }}</td>
+                            <td>{{ order.paid }}</td>
+                            <td><a href="{% url 'orders:order_detail' order.id %}"
+                                   class="btn btn{% if not order.paid %}-outline{% endif %}-primary">Details</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endwith %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

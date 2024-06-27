@@ -1,0 +1,40 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+    <h3>Cart</h3>
+    <table class="table table-dark table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">UnitPrice</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">TotalPrice</th>
+            <th scope="col">Remove</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in cart %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ item.product }}</td>
+                <td>{{ item.price | separate }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total_price | separate }}</td>
+                <td><a href="{% url 'orders:cart_remove' item.product.id %}"> Remove </a></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>TotalCartPrice</td>
+            <td colspan="3"></td>
+            <td>{{ cart.get_total_price | separate }}</td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="{% url 'orders:order_create' %}" class="btn btn-primary">Order</a>
+    
+    
+{% endblock %}

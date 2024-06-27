@@ -1,0 +1,37 @@
+{% extends 'parent/base.html' %}
+
+
+{% block content %}
+    <table class="table table-dark">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Size</th>
+            <th scope="col">Download</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in objects %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ obj.Key }}</td>
+                <td>{{ obj.Size|filesizeformat }}</td>
+                <td><a href="{% url 'home:bucket_home_download' obj.Key %}">Download</a></td>
+                <td><a href="{% url 'home:bucket_home_delete' obj.Key %}">Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <br><br>
+    {% if request.user.is_admin %}
+        <form action="{% url 'home:bucket_home_upload' %}" method="post" novalidate enctype="multipart/form-data"
+              class="col-md-3">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit"> Upload</button>
+        </form>
+    {% endif %}
+{% endblock %}

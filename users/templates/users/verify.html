@@ -1,0 +1,12 @@
+{% extends 'parent/base.html' %}
+
+
+{% block content %}
+    <h2>Verify your registration</h2>
+    <hr>
+    <form action="" method="post" class="col-md-3" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Verify" class="btn btn-primary">
+    </form>
+{% endblock %}

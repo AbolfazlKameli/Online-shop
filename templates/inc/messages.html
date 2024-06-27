@@ -1,0 +1,9 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/messages.css' %}">
+
+{% if messages %}
+    {% for msg in messages %}
+	    <p id="message" class="alert alert-{{ msg.tags }}" >{{ msg }}</p>
+    {% endfor %}
+{% endif %}
