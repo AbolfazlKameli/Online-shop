@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,10 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-v%@_gbd($i5tb66d$)hk=z*)97-33l+8fas@h4f5p#4g!k3=#h'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool, default=True)
 
 ALLOWED_HOSTS = []
 
@@ -89,11 +91,11 @@ WSGI_APPLICATION = 'Ecommerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres name',
-        'USER': 'postgres username',
-        'PASSWORD': 'postgres password',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': config('PG_NAME'),
+        'USER': config('PG_USERNAME'),
+        'PASSWORD': config('PG_PASSWORD'),
+        'HOST': config('PG_HOST'),
+        'PORT': config('PG_PORT', cast=int),
     }
 }
 # Resid Cache
@@ -131,7 +133,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Tehran'
+TIME_ZONE = config('TIMEZONE')
 
 USE_I18N = True
 
@@ -170,17 +172,17 @@ STORAGES = {
         }
     },
 }
-AWS_S3_ACCESS_KEY_ID = 'access key'
-AWS_SECRET_ACCESS_KEY = 'secret key'
-AWS_S3_ENDPOINT_URL = 'endpoint'
-AWS_STORAGE_BUCKET_NAME = 'bucket name'
+AWS_S3_ACCESS_KEY_ID = config('AWS_S3_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
 AWS_SERVICE_NAME = 's3'
 AW_S3_FILE_OVERWRITE = False
 AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
 
 # ZarinPal
 # add your zarinpal info here
-MERCHANT = '00000000-0000-0000-0000-000000000000'
+MERCHANT = config('ZP-MERCHANT', default='00000000-0000-0000-0000-000000000000')
 SANDBOX = True
 if SANDBOX:
     sandbox = 'sandbox'
@@ -195,9 +197,9 @@ CALLBACKURL = 'http://127.0.0.1:8000/orders/verify/'
 
 # Reset Password
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'EMAIL'
-EMAIL_HOST_PASSWORD = '**********'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'Ecommerce'
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')

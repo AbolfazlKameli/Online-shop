@@ -1,5 +1,5 @@
+from decouple import config
 from django.contrib.auth.mixins import UserPassesTestMixin
-
 from kavenegar import *
 
 try:
@@ -10,7 +10,7 @@ except ImportError:
 
 def send_otp_code(phone_number, otp_code):
     try:
-        api = KavenegarAPI('API Key')
+        api = KavenegarAPI(config('KAVENEGAR_API_KEY'))
         params = {
             'sender': '',
             'receptor': phone_number,
