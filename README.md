@@ -1,8 +1,7 @@
 # Online Shop
 
-Online Shop is a free and open source website whose main focus is on digital currency. Django framework is used in
-the back-end of this site. This project is still under development. After
-completion, additional information about this project will be announced.
+Online Shop is a free and open source website. Django framework is used in
+the back-end of this site.
 
 ## Authors
 
